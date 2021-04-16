@@ -3,14 +3,24 @@ import { useQuery } from "react-query";
 import Planet from "./Planet";
 
 const fetchPlanets = async () => {
+  console.log('fetchPlanets...');
+
   const res = await fetch("https://swapi.dev/api/planets/");
-  return res.json();
+  const data = res.json();
+
+  // Simulate slow network (2 seconds)
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('fetchPlanets END.');
+      resolve(data);
+    }, 2000);
+  });
 };
 
 const Planets = () => {
   const { data, status } = useQuery("planets", fetchPlanets, {
     staleTime: 10 * 1000,
-    // cacheTime: 10,
+    cacheTime: 300000, // default 5 min.
     onSuccess: () => console.log("data fetched with no problems")
   });
   // console.log(data);
